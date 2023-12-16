@@ -29,7 +29,8 @@ import io.lb.lbgameshop.core.presentation.navigation.MainScreens
 import io.lb.lbgameshop.core.util.ORDER
 import io.lb.lbgameshop.core.util.Toaster
 import io.lb.lbgameshop.game.presentation.details.OrderDetailsScreen
-import io.lb.lbgameshop.game.presentation.listing.GamersScreen
+import io.lb.lbgameshop.game.presentation.listing.GamesScreen
+import io.lb.lbgameshop.game.presentation.listing.GamesViewModel
 import io.lb.lbgameshop.sign_in.presentation.SignInScreen
 import io.lb.lbgameshop.sign_in.presentation.sing_in.SignInEvent
 import io.lb.lbgameshop.sign_in.presentation.sing_in.SignInViewModel
@@ -64,11 +65,15 @@ class MainActivity : ComponentActivity() {
                     val signInViewModel = hiltViewModel<SignInViewModel>()
                     val signInState = signInViewModel.state.collectAsState().value
 
+                    val gameViewModel = hiltViewModel<GamesViewModel>()
+                    val gameState = gameViewModel.state.collectAsState().value
+
                     var startDestination = MainScreens.SignInScreen.name
 
                     signInViewModel.currentUser?.let {
                         startDestination = MainScreens.GamesScreen.name
                     }
+                    gameViewModel.getGames()
 
                     NavHost(
                         navController = navController,
@@ -142,8 +147,9 @@ class MainActivity : ComponentActivity() {
                         composable(MainScreens.GamesScreen.name) {
                             signInViewModel.onEvent(SignInEvent.LoadSignedInUser)
                             val userData = signInViewModel.currentUser
-                            GamersScreen(
+                            GamesScreen(
                                 userData = userData,
+                                state = gameState,
                                 onSignOut = {
                                     lifecycleScope.launch {
                                         signInViewModel.onEvent(SignInEvent.RequestLogout)
@@ -155,6 +161,9 @@ class MainActivity : ComponentActivity() {
                                         }
                                     }
                                 },
+                                onClickTryAgain = {
+                                    gameViewModel.getGames()
+                                }
                             )
                         }
 

@@ -2,9 +2,15 @@ package io.lb.lbgameshop.game.presentation.listing
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.GridItemSpan
+import androidx.compose.foundation.lazy.grid.LazyGridScope
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.SnackbarHost
 import androidx.compose.material.SnackbarHostState
@@ -31,6 +37,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import io.lb.lbgameshop.R
+import io.lb.lbgameshop.core.presentation.widgets.DefaultErrorScreen
 import io.lb.lbgameshop.core.presentation.navigation.DrawerBody
 import io.lb.lbgameshop.core.presentation.navigation.DrawerHeader
 import io.lb.lbgameshop.core.presentation.navigation.MenuItem
@@ -43,9 +50,11 @@ import kotlinx.coroutines.launch
 @ExperimentalMaterial3Api
 @ExperimentalMaterialApi
 @Composable
-fun GamersScreen(
+fun GamesScreen(
     userData: UserData?,
+    state: GameState,
     onSignOut: () -> Unit,
+    onClickTryAgain: () -> Unit,
 ) {
     val coroutineScope = rememberCoroutineScope()
     val search = remember {
@@ -119,11 +128,11 @@ fun GamersScreen(
                     )
                 }
             },
-        ) {
+        ) { padding ->
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(it),
+                    .padding(padding),
                 verticalArrangement = Arrangement.Top,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
@@ -138,9 +147,50 @@ fun GamersScreen(
                     },
                 )
 
-                LazyColumn {
+                LazyVerticalGrid(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(horizontal = 12.dp),
+                    columns = GridCells.Fixed(2),
+                    verticalArrangement = Arrangement.Top,
+                ) {
+                    if (!state.loading) {
+                        state.games.takeIf { games ->
+                            games.isNotEmpty()
+                        }?.let {
+                            gamesColumn(state)
+                        } ?: run {
+                            item(span = { GridItemSpan(2) }) {
+                                DefaultErrorScreen {
+                                    onClickTryAgain.invoke()
+                                }
+                            }
+                        }
+                    } else {
+                        gamesShimmerColumn()
+                    }
                 }
             }
         }
+    }
+}
+
+private fun LazyGridScope.gamesShimmerColumn() {
+    items(5) {
+        GameShimmerCard()
+        Spacer(modifier = Modifier.height(16.dp))
+    }
+}
+
+@ExperimentalMaterial3Api
+private fun LazyGridScope.gamesColumn(
+    state: GameState
+) {
+    items(state.games) { game ->
+        GameCard(
+            game = game,
+            onClick = {
+            },
+        )
     }
 }

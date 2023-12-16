@@ -22,7 +22,7 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object AppModule {
-    private const val BASE_URL = "https://www.cheapshark.com/api/1.0/"
+    private const val BASE_URL = "https://www.cheapshark.com/"
 
     @Provides
     @Singleton
