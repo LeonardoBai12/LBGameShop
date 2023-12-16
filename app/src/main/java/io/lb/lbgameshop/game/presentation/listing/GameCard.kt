@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
@@ -23,6 +24,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
@@ -30,6 +32,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberAsyncImagePainter
 import io.lb.lbgameshop.core.util.shimmerAnimation
+import io.lb.lbgameshop.core.util.toCurrencyString
 import io.lb.lbgameshop.game.domain.model.Game
 
 @ExperimentalMaterial3Api
@@ -108,16 +111,27 @@ fun GameCard(game: Game, onClick: () -> Unit) {
             Text(
                 modifier = Modifier
                     .padding(start = 12.dp),
-                text = "U$ ${game.normalPrice.toString().replace(".", ",")}",
+                text = game.normalPrice.toCurrencyString(),
                 fontSize = 12.sp,
                 textDecoration = TextDecoration.LineThrough
             )
 
-            Text(
+            if (game.salePrice == 0.0)
+                Text(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(end = 12.dp),
+                    text = "Free",
+                    color = Color.Green,
+                    textAlign = TextAlign.End,
+                    fontSize = 18.sp,
+                )
+            else Text(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(end = 12.dp),
-                text = "U$ ${game.salePrice.toString().replace(".", ",")}",
+                text = game.salePrice.toCurrencyString(),
+                color = MaterialTheme.colorScheme.primary,
                 textAlign = TextAlign.End,
                 fontSize = 18.sp,
             )
