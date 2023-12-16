@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.Flow
 class GetGamesUseCase(
     private val repository: GameRepository
 ) {
-    suspend operator fun invoke(): Flow<Resource<List<Game>>> {
+    operator fun invoke(): Flow<Resource<List<Game>>> {
         return repository.getGames()
     }
 }

@@ -13,7 +13,7 @@ import java.io.IOException
 class GameRepositoryImpl(
     private val client: GameClient
 ) : GameRepository {
-    override suspend fun getGames(): Flow<Resource<List<Game>>> {
+    override fun getGames(): Flow<Resource<List<Game>>> {
         return flow {
             emit(Resource.Loading(true))
             delay(1000)

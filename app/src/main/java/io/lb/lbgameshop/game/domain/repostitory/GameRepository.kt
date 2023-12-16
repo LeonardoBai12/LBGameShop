@@ -11,5 +11,5 @@ interface GameRepository {
     /**
      * Request a list of games.
      */
-    suspend fun getGames(): Flow<Resource<List<Game>>>
+    fun getGames(): Flow<Resource<List<Game>>>
 }
