@@ -32,7 +32,7 @@ class RealtimeDatabaseClientImpl(
             .await()
     }
 
-    override suspend fun getUnfinishedOrder(userData: UserData) : Flow<Resource<Order?>> = flow {
+    override fun getUnfinishedOrder(userData: UserData) : Flow<Resource<Order?>> = flow {
         emit(Resource.Loading(true))
 
         val result = database.child(userData.userId ?: return@flow).get().await()
@@ -48,8 +48,8 @@ class RealtimeDatabaseClientImpl(
             )
         } else {
             emit(
-                Resource.Success(
-                    data = null
+                Resource.Error(
+                    "There are no unfinished orders."
                 )
             )
         }

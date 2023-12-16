@@ -22,7 +22,7 @@ class OrderRepositoryImpl(
         client.resetUnfinishedOrder(userData, order)
     }
 
-    override suspend fun getUnfinishedOrder(userData: UserData): Flow<Resource<Order?>> {
+    override fun getUnfinishedOrder(userData: UserData): Flow<Resource<Order?>> {
         return client.getUnfinishedOrder(userData)
     }
 

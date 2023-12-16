@@ -9,6 +9,6 @@ interface RealtimeDatabaseClient {
     suspend fun addOrderItem(userData: UserData, order: Order)
     suspend fun finishOrder(userData: UserData, order: Order)
     suspend fun resetUnfinishedOrder(userData: UserData, order: Order)
-    suspend fun getUnfinishedOrder(userData: UserData) : Flow<Resource<Order?>>
+    fun getUnfinishedOrder(userData: UserData) : Flow<Resource<Order?>>
     fun getFinishedOrders(userData: UserData) : Flow<Resource<List<Order>>>
 }
