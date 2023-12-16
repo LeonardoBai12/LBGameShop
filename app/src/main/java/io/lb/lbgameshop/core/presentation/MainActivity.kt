@@ -29,6 +29,7 @@ import io.lb.lbgameshop.core.presentation.navigation.MainScreens
 import io.lb.lbgameshop.core.util.ORDER
 import io.lb.lbgameshop.core.util.Toaster
 import io.lb.lbgameshop.game.presentation.details.OrderDetailsScreen
+import io.lb.lbgameshop.game.presentation.listing.GameEvent
 import io.lb.lbgameshop.game.presentation.listing.GamesScreen
 import io.lb.lbgameshop.game.presentation.listing.GamesViewModel
 import io.lb.lbgameshop.sign_in.presentation.SignInScreen
@@ -163,6 +164,9 @@ class MainActivity : ComponentActivity() {
                                 },
                                 onClickTryAgain = {
                                     gameViewModel.getGames()
+                                },
+                                onSearchTask = { filter ->
+                                    gameViewModel.onEvent(GameEvent.SearchedForTask(filter))
                                 }
                             )
                         }

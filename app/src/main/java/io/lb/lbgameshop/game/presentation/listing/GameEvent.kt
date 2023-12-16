@@ -1,4 +1,5 @@
 package io.lb.lbgameshop.game.presentation.listing
 
-class GameEvent {
+sealed class GameEvent {
+    data class SearchedForTask(val filter: String) : GameEvent()
 }
