@@ -143,7 +143,7 @@ fun OrderDetailsScreen(
 
                 game.steamRatingPercent?.takeIf {
                     it != 0
-                }?.let {steamRatingPercent ->
+                }?.let { steamRatingPercent ->
                     Row {
                         Text(
                             text = "Steam rating:",
@@ -160,7 +160,7 @@ fun OrderDetailsScreen(
                             Text(text = "(${game.steamRatingCount})")
                         }
                     }
-                    
+
                     game.steamRatingText?.let {
                         Text(
                             text = it,
@@ -171,7 +171,7 @@ fun OrderDetailsScreen(
                 }
 
                 Spacer(modifier = Modifier.height(16.dp))
-                
+
                 DefaultTextButton(
                     modifier = Modifier
                         .fillMaxWidth()

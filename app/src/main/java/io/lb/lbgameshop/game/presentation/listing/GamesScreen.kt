@@ -12,8 +12,6 @@ import androidx.compose.foundation.lazy.grid.LazyGridScope
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.SnackbarHost
-import androidx.compose.material.SnackbarHostState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ExitToApp
 import androidx.compose.material.icons.filled.Home
@@ -26,6 +24,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
@@ -38,11 +38,11 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import io.lb.lbgameshop.R
-import io.lb.lbgameshop.core.presentation.widgets.DefaultErrorScreen
 import io.lb.lbgameshop.core.presentation.navigation.DrawerBody
 import io.lb.lbgameshop.core.presentation.navigation.DrawerHeader
 import io.lb.lbgameshop.core.presentation.navigation.MainScreens
 import io.lb.lbgameshop.core.presentation.navigation.MenuItem
+import io.lb.lbgameshop.core.presentation.widgets.DefaultErrorScreen
 import io.lb.lbgameshop.core.presentation.widgets.OrderAppBar
 import io.lb.lbgameshop.core.util.DefaultSearchBar
 import io.lb.lbgameshop.sign_in.domain.model.UserData

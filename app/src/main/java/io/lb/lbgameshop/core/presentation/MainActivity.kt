@@ -196,7 +196,6 @@ class MainActivity : ComponentActivity() {
                                     navController = navController,
                                     game = Game.fromJson(it),
                                     onClickAddToCart = {
-
                                     }
                                 )
                             }
