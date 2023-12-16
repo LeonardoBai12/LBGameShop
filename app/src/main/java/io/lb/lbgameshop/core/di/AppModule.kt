@@ -12,7 +12,10 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import io.lb.lbgameshop.core.util.LBToaster
+import io.lb.lbgameshop.core.util.ORDER
 import io.lb.lbgameshop.core.util.Toaster
+import io.lb.lbgameshop.order.data.remote.RealtimeDatabaseClient
+import io.lb.lbgameshop.order.data.remote.RealtimeDatabaseClientImpl
 import io.lb.lbgameshop.sign_in.data.auth_client.GoogleAuthClient
 import io.lb.lbgameshop.sign_in.data.auth_client.GoogleAuthClientImpl
 import okhttp3.OkHttpClient
@@ -65,6 +68,14 @@ object AppModule {
         return Firebase.database.apply {
             setPersistenceEnabled(true)
         }
+    }
+
+    @Provides
+    @Singleton
+    fun providesRealtimeDatabaseClient(
+        database: FirebaseDatabase
+    ): RealtimeDatabaseClient {
+        return RealtimeDatabaseClientImpl(database.getReference(ORDER))
     }
 
     @Provides
