@@ -28,10 +28,8 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavHostController
 import io.lb.lbgameshop.R
 import io.lb.lbgameshop.core.presentation.navigation.DrawerBody
 import io.lb.lbgameshop.core.presentation.navigation.DrawerHeader
@@ -112,7 +110,6 @@ fun GamersScreen(
                 FloatingActionButton(
                     containerColor = MaterialTheme.colorScheme.primary,
                     onClick = {
-
                     },
                 ) {
                     Icon(
@@ -138,12 +135,10 @@ fun GamersScreen(
                         bottom = 16.dp
                     ),
                     onSearch = { filter ->
-
                     },
                 )
 
                 LazyColumn {
-
                 }
             }
         }
