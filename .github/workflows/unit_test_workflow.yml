@@ -4,6 +4,7 @@ on: pull_request
 
 jobs:
   run_unit_tests:
+    name: Run Unit Tests
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
