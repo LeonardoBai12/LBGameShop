@@ -12,7 +12,6 @@ import dagger.Provides
 import dagger.hilt.components.SingletonComponent
 import dagger.hilt.testing.TestInstallIn
 import io.lb.lbgameshop.core.util.FakeToaster
-import io.lb.lbgameshop.core.util.ORDER_TEST
 import io.lb.lbgameshop.core.util.Toaster
 import io.lb.lbgameshop.sign_in.data.auth_client.GoogleAuthClient
 import io.lb.lbgameshop.sign_in.data.auth_client.GoogleAuthClientImpl

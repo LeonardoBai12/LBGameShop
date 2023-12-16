@@ -40,7 +40,6 @@ abstract class LBAndroidTest {
                     "jetpackPassword"
                 ).await()
             } catch (_: Exception) {
-
             }
         }
 
