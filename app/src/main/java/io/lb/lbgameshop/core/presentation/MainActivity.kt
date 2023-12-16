@@ -30,8 +30,8 @@ import io.lb.lbgameshop.core.util.Toaster
 import io.lb.lbgameshop.sign_in.presentation.SignInScreen
 import io.lb.lbgameshop.sign_in.presentation.sing_in.SignInEvent
 import io.lb.lbgameshop.sign_in.presentation.sing_in.SignInViewModel
-import io.lb.lbgameshop.order.presentation.details.OrderDetailsScreen
-import io.lb.lbgameshop.order.presentation.listing.OrdersScreen
+import io.lb.lbgameshop.game.presentation.details.OrderDetailsScreen
+import io.lb.lbgameshop.game.presentation.listing.GamersScreen
 import io.lb.lbgameshop.ui.theme.LBGameShopTheme
 import io.lb.lbgameshop.R
 import kotlinx.coroutines.flow.collectLatest
@@ -67,7 +67,7 @@ class MainActivity : ComponentActivity() {
                     var startDestination = MainScreens.SignInScreen.name
 
                     signInViewModel.currentUser?.let {
-                        startDestination = MainScreens.OrdersScreen.name
+                        startDestination = MainScreens.GamesScreen.name
                     }
 
                     NavHost(
@@ -90,7 +90,7 @@ class MainActivity : ComponentActivity() {
                                 if (signInState.isSignInSuccessful) {
                                     toaster.showToast(R.string.sign_in_successful)
 
-                                    navController.navigate(MainScreens.OrdersScreen.name)
+                                    navController.navigate(MainScreens.GamesScreen.name)
                                     signInViewModel.resetState()
                                 }
                             }
@@ -139,14 +139,27 @@ class MainActivity : ComponentActivity() {
                             )
                         }
 
-                        composable(MainScreens.OrdersScreen.name) {
+                        composable(MainScreens.GamesScreen.name) {
                             signInViewModel.onEvent(SignInEvent.LoadSignedInUser)
                             val userData = signInViewModel.currentUser
-                            OrdersScreen()
+                            GamersScreen(
+                                userData = userData,
+                                onSignOut = {
+                                    lifecycleScope.launch {
+                                        signInViewModel.onEvent(SignInEvent.RequestLogout)
+                                        toaster.showToast(R.string.signed_out)
+                                        navController.navigate(MainScreens.SignInScreen.name) {
+                                            popUpTo(MainScreens.GamesScreen.name) {
+                                                inclusive = true
+                                            }
+                                        }
+                                    }
+                                },
+                            )
                         }
 
                         composable(
-                            route = MainScreens.OrderDetailsScreen.name + "/{$ORDER}",
+                            route = MainScreens.GameDetailsScreen.name + "/{$ORDER}",
                             arguments = listOf(
                                 navArgument(name = ORDER) {
                                     type = NavType.StringType

@@ -147,4 +147,46 @@ class SignInScreenTest : LBAndroidTest() {
             pretendToShowAToast("Write your password")
         }
     }
+
+    @Test
+    fun tryingToSignInTwice_showsToast() = runBlocking {
+        SignInScreenRobot(composeRule)
+            .clickHomeSignIn()
+            .inputEmail("jetpack@compose.com")
+            .inputPassword("jetpackPassword")
+            .inputRepeatedPassword("jetpackPassword")
+            .clickBottomSheetSignIn()
+            .clickLogout()
+            .apply { delay(500) }
+            .clickHomeSignIn()
+            .inputEmail("jetpack@compose.com")
+            .inputPassword("jetpackPassword")
+            .inputRepeatedPassword("jetpackPassword")
+            .clickBottomSheetSignIn()
+
+        verify {
+            pretendToShowAToastWithResId(R.string.sign_in_successful)
+            pretendToShowAToast("The email address is already in use by another account.")
+        }
+    }
+
+    @Test
+    fun insertingValidDataOnLogin_navigatesToGamesScreen() = runBlocking {
+        SignInScreenRobot(composeRule)
+            .clickHomeSignIn()
+            .inputEmail("jetpack@compose.com")
+            .inputPassword("jetpackPassword")
+            .inputRepeatedPassword("jetpackPassword")
+            .clickBottomSheetSignIn()
+            .clickLogout()
+            .apply { delay(500) }
+            .clickHomeLogin()
+            .inputEmail("jetpack@compose.com")
+            .inputPassword("jetpackPassword")
+            .clickBottomSheetLogin()
+
+        verify(exactly = 2) {
+            pretendToShowAToastWithResId(R.string.sign_in_successful)
+        }
+    }
 }

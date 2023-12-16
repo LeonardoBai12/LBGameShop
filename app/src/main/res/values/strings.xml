@@ -11,4 +11,5 @@
     <string name="something_went_wrong">Oops! Something went wrong!</string>
     <string name="signed_out">Signed out</string>
     <string name="logout">Logout</string>
+    <string name="home">Home</string>
 </resources>

@@ -1,4 +1,4 @@
-package io.lb.lbgameshop.order.presentation.details
+package io.lb.lbgameshop.game.presentation.details
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
