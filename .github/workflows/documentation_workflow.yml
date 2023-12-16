@@ -7,8 +7,8 @@ on:
 
 jobs:
   documentation:
+    name: Generate LBGameShop Documentation
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v2
 
