@@ -177,8 +177,10 @@ fun GamesScreen(
 
 private fun LazyGridScope.gamesShimmerColumn() {
     items(5) {
-        GameShimmerCard()
-        Spacer(modifier = Modifier.height(16.dp))
+        Column {
+            GameShimmerCard()
+            Spacer(modifier = Modifier.height(16.dp))
+        }
     }
 }
 
@@ -187,10 +189,13 @@ private fun LazyGridScope.gamesColumn(
     state: GameState
 ) {
     items(state.games) { game ->
-        GameCard(
-            game = game,
-            onClick = {
-            },
-        )
+        Column {
+            GameCard(
+                game = game,
+                onClick = {
+                },
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+        }
     }
 }

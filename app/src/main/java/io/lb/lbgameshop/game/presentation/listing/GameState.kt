@@ -4,5 +4,5 @@ import io.lb.lbgameshop.game.domain.model.Game
 
 data class GameState(
     val games: List<Game> = emptyList(),
-    val loading: Boolean = true,
+    val loading: Boolean = false,
 )

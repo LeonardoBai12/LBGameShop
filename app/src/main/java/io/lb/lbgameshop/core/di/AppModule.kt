@@ -15,9 +15,12 @@ import io.lb.lbgameshop.core.util.LBToaster
 import io.lb.lbgameshop.core.util.Toaster
 import io.lb.lbgameshop.sign_in.data.auth_client.GoogleAuthClient
 import io.lb.lbgameshop.sign_in.data.auth_client.GoogleAuthClientImpl
+import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
+
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -27,7 +30,12 @@ object AppModule {
     @Provides
     @Singleton
     fun providesRetrofit(): Retrofit {
+        val interceptor = HttpLoggingInterceptor()
+        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY)
+        val client = OkHttpClient.Builder().addInterceptor(interceptor).build()
+
         return Retrofit.Builder()
+            .client(client)
             .baseUrl(BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .build()

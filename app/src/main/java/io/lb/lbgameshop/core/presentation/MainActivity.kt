@@ -73,7 +73,6 @@ class MainActivity : ComponentActivity() {
                     signInViewModel.currentUser?.let {
                         startDestination = MainScreens.GamesScreen.name
                     }
-                    gameViewModel.getGames()
 
                     NavHost(
                         navController = navController,
@@ -147,6 +146,7 @@ class MainActivity : ComponentActivity() {
                         composable(MainScreens.GamesScreen.name) {
                             signInViewModel.onEvent(SignInEvent.LoadSignedInUser)
                             val userData = signInViewModel.currentUser
+
                             GamesScreen(
                                 userData = userData,
                                 state = gameState,

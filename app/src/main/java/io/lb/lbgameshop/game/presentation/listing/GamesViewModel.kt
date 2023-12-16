@@ -11,8 +11,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -28,7 +26,10 @@ class GamesViewModel @Inject constructor(
     val eventFlow = _eventFlow.asSharedFlow()
 
     private var searchJob: Job? = null
-    private var getGamesJob: Job? = null
+
+    init {
+        getGames()
+    }
 
     sealed class UiEvent {
         data class ShowToast(val message: String) : UiEvent()
