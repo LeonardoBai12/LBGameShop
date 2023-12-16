@@ -1,6 +1,8 @@
 package io.lb.lbgameshop.game.domain.model
 
-import java.io.Serializable
+import com.google.gson.Gson
+import java.net.URLEncoder
+import java.nio.charset.StandardCharsets
 
 /**
  * Data of game on sale.
@@ -21,10 +23,21 @@ data class Game(
     val title: String,
     val salePrice: Double,
     val normalPrice: Double,
-    val metacriticScore: Int,
-    val steamRatingText: String,
-    val steamRatingPercent: Int,
-    val steamRatingCount: Int,
-    val releaseDate: Int,
+    val metacriticScore: Int?,
+    val steamRatingText: String?,
+    val steamRatingPercent: Int?,
+    val steamRatingCount: Int?,
+    val releaseDate: Long?,
     val thumb: String,
-) : Serializable
+) {
+    companion object {
+        fun fromJson(json: String): Game = Gson().fromJson(json, Game::class.java)
+    }
+
+    fun toJson(): String {
+        return URLEncoder.encode(
+            Gson().toJson(this).toString(),
+            StandardCharsets.UTF_8.toString()
+        ).replace("+", " ")
+    }
+}

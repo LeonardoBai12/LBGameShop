@@ -34,6 +34,7 @@ import coil.compose.rememberAsyncImagePainter
 import io.lb.lbgameshop.core.util.shimmerAnimation
 import io.lb.lbgameshop.core.util.toCurrencyString
 import io.lb.lbgameshop.game.domain.model.Game
+import io.lb.lbgameshop.game.presentation.SalePriceText
 
 @ExperimentalMaterial3Api
 @Composable
@@ -116,24 +117,11 @@ fun GameCard(game: Game, onClick: () -> Unit) {
                 textDecoration = TextDecoration.LineThrough
             )
 
-            if (game.salePrice == 0.0)
-                Text(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(end = 12.dp),
-                    text = "Free",
-                    color = Color.Green,
-                    textAlign = TextAlign.End,
-                    fontSize = 18.sp,
-                )
-            else Text(
+            SalePriceText(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(end = 12.dp),
-                text = game.salePrice.toCurrencyString(),
-                color = MaterialTheme.colorScheme.primary,
-                textAlign = TextAlign.End,
-                fontSize = 18.sp,
+                game = game
             )
         }
 

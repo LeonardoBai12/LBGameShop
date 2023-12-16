@@ -36,10 +36,12 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
 import io.lb.lbgameshop.R
 import io.lb.lbgameshop.core.presentation.widgets.DefaultErrorScreen
 import io.lb.lbgameshop.core.presentation.navigation.DrawerBody
 import io.lb.lbgameshop.core.presentation.navigation.DrawerHeader
+import io.lb.lbgameshop.core.presentation.navigation.MainScreens
 import io.lb.lbgameshop.core.presentation.navigation.MenuItem
 import io.lb.lbgameshop.core.presentation.widgets.OrderAppBar
 import io.lb.lbgameshop.core.util.DefaultSearchBar
@@ -51,6 +53,7 @@ import kotlinx.coroutines.launch
 @ExperimentalMaterialApi
 @Composable
 fun GamesScreen(
+    navController: NavHostController,
     userData: UserData?,
     state: GameState,
     onSignOut: () -> Unit,
@@ -160,7 +163,7 @@ fun GamesScreen(
                         state.games.takeIf { games ->
                             games.isNotEmpty()
                         }?.let {
-                            gamesColumn(state)
+                            gamesColumn(navController, state)
                         } ?: run {
                             if (search.value.isBlank()) {
                                 item(span = { GridItemSpan(2) }) {
@@ -190,6 +193,7 @@ private fun LazyGridScope.gamesShimmerColumn() {
 
 @ExperimentalMaterial3Api
 private fun LazyGridScope.gamesColumn(
+    navController: NavHostController,
     state: GameState
 ) {
     items(state.games) { game ->
@@ -197,6 +201,9 @@ private fun LazyGridScope.gamesColumn(
             GameCard(
                 game = game,
                 onClick = {
+                    navController.navigate(
+                        MainScreens.GameDetailsScreen.name + "/${game.toJson()}"
+                    )
                 },
             )
             Spacer(modifier = Modifier.height(8.dp))

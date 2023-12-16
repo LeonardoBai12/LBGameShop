@@ -26,8 +26,9 @@ import androidx.navigation.navArgument
 import dagger.hilt.android.AndroidEntryPoint
 import io.lb.lbgameshop.R
 import io.lb.lbgameshop.core.presentation.navigation.MainScreens
-import io.lb.lbgameshop.core.util.ORDER
+import io.lb.lbgameshop.core.util.GAME
 import io.lb.lbgameshop.core.util.Toaster
+import io.lb.lbgameshop.game.domain.model.Game
 import io.lb.lbgameshop.game.presentation.details.OrderDetailsScreen
 import io.lb.lbgameshop.game.presentation.listing.GameEvent
 import io.lb.lbgameshop.game.presentation.listing.GamesScreen
@@ -148,7 +149,18 @@ class MainActivity : ComponentActivity() {
                             signInViewModel.onEvent(SignInEvent.LoadSignedInUser)
                             val userData = signInViewModel.currentUser
 
+                            LaunchedEffect(key1 = MainScreens.GamesScreen.name) {
+                                gameViewModel.eventFlow.collectLatest { event ->
+                                    when (event) {
+                                        is GamesViewModel.UiEvent.ShowToast -> {
+                                            toaster.showToast(event.message)
+                                        }
+                                    }
+                                }
+                            }
+
                             GamesScreen(
+                                navController = navController,
                                 userData = userData,
                                 state = gameState,
                                 onSignOut = {
@@ -172,15 +184,21 @@ class MainActivity : ComponentActivity() {
                         }
 
                         composable(
-                            route = MainScreens.GameDetailsScreen.name + "/{$ORDER}",
+                            route = MainScreens.GameDetailsScreen.name + "/{$GAME}",
                             arguments = listOf(
-                                navArgument(name = ORDER) {
+                                navArgument(name = GAME) {
                                     type = NavType.StringType
                                 }
                             )
                         ) { backStackEntry ->
-                            backStackEntry.arguments?.getString(ORDER)?.let {
-                                OrderDetailsScreen()
+                            backStackEntry.arguments?.getString(GAME)?.let {
+                                OrderDetailsScreen(
+                                    navController = navController,
+                                    game = Game.fromJson(it),
+                                    onClickAddToCart = {
+
+                                    }
+                                )
                             }
                         }
                     }
