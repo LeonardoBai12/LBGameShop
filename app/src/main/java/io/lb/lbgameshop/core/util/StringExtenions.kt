@@ -19,6 +19,6 @@ fun String.reviewColor(): Color {
     }
 }
 
-fun String.toOrderItemList() : List<OrderItem> {
+fun String.toOrderItemList(): List<OrderItem> {
     return Gson().fromJson(this, Array<OrderItem>::class.java).asList()
 }
