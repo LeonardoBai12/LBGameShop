@@ -38,7 +38,7 @@ import io.lb.lbgameshop.game.presentation.SalePriceText
 @ExperimentalMaterial3Api
 @ExperimentalComposeUiApi
 @Composable
-fun OrderDetailsScreen(
+fun GameDetailsScreen(
     navController: NavHostController,
     game: Game,
     onClickAddToCart: (Game) -> Unit

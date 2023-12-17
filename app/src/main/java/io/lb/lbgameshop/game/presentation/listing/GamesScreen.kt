@@ -58,7 +58,8 @@ fun GamesScreen(
     state: GameState,
     onSignOut: () -> Unit,
     onClickTryAgain: () -> Unit,
-    onSearchGame: (String) -> Unit
+    onSearchGame: (String) -> Unit,
+    onClickFab: () -> Unit
 ) {
     val coroutineScope = rememberCoroutineScope()
     val search = remember {
@@ -123,6 +124,7 @@ fun GamesScreen(
                 FloatingActionButton(
                     containerColor = MaterialTheme.colorScheme.primary,
                     onClick = {
+                        onClickFab.invoke()
                     },
                 ) {
                     Icon(
@@ -202,7 +204,7 @@ private fun LazyGridScope.gamesColumn(
                 game = game,
                 onClick = {
                     navController.navigate(
-                        MainScreens.GameDetailsScreen.name + "/${game.toJson()}"
+                        MainScreens.GameDetailsScreen.name + "/${game.toJsonEncode()}"
                     )
                 },
             )

@@ -31,12 +31,12 @@ import io.lb.lbgameshop.core.presentation.navigation.MainScreens
 import io.lb.lbgameshop.core.util.GAME
 import io.lb.lbgameshop.core.util.Toaster
 import io.lb.lbgameshop.game.domain.model.Game
-import io.lb.lbgameshop.game.presentation.details.OrderDetailsScreen
+import io.lb.lbgameshop.game.presentation.details.GameDetailsScreen
 import io.lb.lbgameshop.game.presentation.listing.GameEvent
 import io.lb.lbgameshop.game.presentation.listing.GamesScreen
 import io.lb.lbgameshop.game.presentation.listing.GamesViewModel
-import io.lb.lbgameshop.order.presentation.my_order.MyOrdersScreen
 import io.lb.lbgameshop.order.presentation.new_order.NewOrderEvent
+import io.lb.lbgameshop.order.presentation.new_order.NewOrderScreen
 import io.lb.lbgameshop.order.presentation.new_order.NewOrderViewModel
 import io.lb.lbgameshop.sign_in.presentation.SignInScreen
 import io.lb.lbgameshop.sign_in.presentation.sing_in.SignInEvent
@@ -194,6 +194,9 @@ class MainActivity : ComponentActivity() {
                                 },
                                 onSearchGame = { filter ->
                                     gameViewModel.onEvent(GameEvent.SearchedForGame(filter))
+                                },
+                                onClickFab = {
+                                    navController.navigate(MainScreens.NewOrderScreen.name)
                                 }
                             )
                         }
@@ -207,7 +210,7 @@ class MainActivity : ComponentActivity() {
                             )
                         ) { backStackEntry ->
                             backStackEntry.arguments?.getString(GAME)?.let {
-                                OrderDetailsScreen(
+                                GameDetailsScreen(
                                     navController = navController,
                                     game = Game.fromJson(it),
                                     onClickAddToCart = { game ->
@@ -225,7 +228,10 @@ class MainActivity : ComponentActivity() {
                             val userData = signInViewModel.currentUser
                             newOrderViewModel.userData = userData
 
-                            MyOrdersScreen(newOrderState)
+                            NewOrderScreen(
+                                navController = navController,
+                                state = newOrderState
+                            )
                         }
                     }
                 }

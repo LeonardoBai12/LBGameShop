@@ -34,10 +34,14 @@ data class Game(
         fun fromJson(json: String): Game = Gson().fromJson(json, Game::class.java)
     }
 
-    fun toJson(): String {
+    fun toJsonEncode(): String {
         return URLEncoder.encode(
             Gson().toJson(this).toString(),
             StandardCharsets.UTF_8.toString()
         ).replace("+", " ")
+    }
+
+    fun toJson(): String {
+        return Gson().toJson(this).toString()
     }
 }

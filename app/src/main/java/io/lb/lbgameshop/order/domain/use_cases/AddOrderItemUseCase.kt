@@ -16,7 +16,7 @@ class AddOrderItemUseCase(
     ) {
         val orderItem = OrderItem(
             orderId = order.uuid,
-            data = game
+            data = game.toJson()
         )
 
         repository.addOrderItem(userData, order, orderItem)

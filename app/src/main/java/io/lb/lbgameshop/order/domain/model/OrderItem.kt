@@ -9,7 +9,7 @@ data class OrderItem(
     val uuid: String = UUID.randomUUID().toString(),
     val orderId: String,
     val createdDate: String = Calendar.getInstance().timeInMillis.toString(),
-    val data: Game
+    val data: String
 ) {
     companion object {
         fun fromJson(json: String): OrderItem = Gson().fromJson(json, OrderItem::class.java)
@@ -19,7 +19,7 @@ data class OrderItem(
                 uuid = hashMap["uuid"] ?: "",
                 orderId = hashMap["orderId"] ?: "",
                 createdDate = hashMap["createdDate"] ?: "",
-                data = Game.fromJson(hashMap["data"] ?: "")
+                data = hashMap["data"] ?: ""
             )
         }
     }

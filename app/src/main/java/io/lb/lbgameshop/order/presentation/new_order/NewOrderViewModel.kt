@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.lb.lbgameshop.core.util.Resource
+import io.lb.lbgameshop.game.domain.model.Game
 import io.lb.lbgameshop.order.domain.model.Order
 import io.lb.lbgameshop.order.domain.model.OrderItem
 import io.lb.lbgameshop.order.domain.use_cases.OrderUseCases
@@ -66,10 +67,10 @@ class NewOrderViewModel @Inject constructor(
         }
     }
 
-    fun getOrderItems(userData: UserData) {
+    private fun getOrderItems() {
         getItemsJob?.cancel()
         getItemsJob = useCases.getItemsFromOrderUseCase(
-            userData,
+            userData ?: return,
             state.value.order
         ).onEach { result ->
             when (result) {
@@ -96,10 +97,8 @@ class NewOrderViewModel @Inject constructor(
     }
 
     fun getOrder() {
-        userData ?: return
-
         getOrderJob?.cancel()
-        getOrderJob = useCases.getUnfinishedOrderUseCase(userData!!).onEach { result ->
+        getOrderJob = useCases.getUnfinishedOrderUseCase(userData ?: return).onEach { result ->
             when (result) {
                 is Resource.Success -> {
                     result.data?.let { order ->
@@ -108,6 +107,8 @@ class NewOrderViewModel @Inject constructor(
                                 order = order,
                             )
                         }
+
+                        getOrderItems()
                     }
                 }
                 is Resource.Error -> {
@@ -129,7 +130,7 @@ class NewOrderViewModel @Inject constructor(
                 useCases.addOrderItemUseCase(
                     userData = it,
                     order = state.value.order,
-                    game = orderItem.data
+                    game = Game.fromJson(orderItem.data)
                 )
             }
         }
