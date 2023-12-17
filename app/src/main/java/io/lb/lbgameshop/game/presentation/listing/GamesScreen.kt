@@ -57,6 +57,7 @@ fun GamesScreen(
     userData: UserData?,
     state: GameState,
     onSignOut: () -> Unit,
+    onClickMyOrders: () -> Unit,
     onClickTryAgain: () -> Unit,
     onSearchGame: (String) -> Unit,
     onClickFab: () -> Unit
@@ -85,6 +86,12 @@ fun GamesScreen(
                             icon = Icons.Default.Home
                         ),
                         MenuItem(
+                            id = "My Orders",
+                            title = stringResource(id = R.string.logout),
+                            contentDescription = "My Orders Button",
+                            icon = Icons.Default.ShoppingCart
+                        ),
+                        MenuItem(
                             id = "Logout",
                             title = stringResource(id = R.string.logout),
                             contentDescription = "Logout Button",
@@ -98,7 +105,9 @@ fun GamesScreen(
                                     drawerState.close()
                                 }
                             }
-
+                            "My Orders" -> {
+                                onClickMyOrders.invoke()
+                            }
                             "Logout" -> {
                                 onSignOut.invoke()
                             }

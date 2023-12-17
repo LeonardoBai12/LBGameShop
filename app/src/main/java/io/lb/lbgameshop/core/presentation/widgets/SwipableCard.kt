@@ -37,9 +37,9 @@ import kotlin.math.roundToInt
 @ExperimentalMaterial3Api
 @Composable
 fun SwipeableCard(
-    onClickSwiped: () -> Unit,
+    onClickSwiped: (() -> Unit)? = null,
     swipedContent: @Composable (() -> Unit),
-    onClickCard: () -> Unit,
+    onClickCard: (() -> Unit)? = null,
     cardContent: @Composable (ColumnScope.() -> Unit),
 ) {
     val isSwiped = remember {
@@ -73,7 +73,7 @@ fun SwipeableCard(
     val scope = rememberCoroutineScope()
 
     Surface {
-        if (offsetTransition.value > 0) {
+        if (offsetTransition.value > 0 && onClickSwiped != null) {
             Surface(
                 modifier = Modifier
                     .height(swipeHeight.value.toDp(LocalDensity.current))
@@ -93,10 +93,17 @@ fun SwipeableCard(
         }
 
         DefaultCard(
-            modifier = Modifier
+            modifier =
+            onClickSwiped?.let {
+                Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 12.dp)
+                    .padding(bottom = 12.dp)
+            } ?: Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 12.dp)
                 .padding(bottom = 12.dp)
+
                 .offset {
                     IntOffset(offsetTransition.value.roundToInt(), 0)
                 }
@@ -123,7 +130,7 @@ fun SwipeableCard(
                     }
                 },
             onClick = {
-                onClickCard.invoke()
+                onClickCard?.invoke()
             },
             content = cardContent
         )

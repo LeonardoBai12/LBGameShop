@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.Flow
 class GetFinishedOrdersUseCase(
     val repository: OrderRepository
 ) {
-    fun invoke(userData: UserData): Flow<Resource<Order?>> {
-        return repository.getUnfinishedOrder(userData)
+    operator fun invoke(userData: UserData): Flow<Resource<List<Order>>> {
+        return repository.getFinishedOrders(userData)
     }
 }

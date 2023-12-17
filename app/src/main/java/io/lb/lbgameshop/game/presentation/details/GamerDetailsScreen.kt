@@ -42,6 +42,7 @@ fun GameDetailsScreen(
     navController: NavHostController,
     game: Game,
     isInTheCart: Boolean,
+    isFinishedOrder: Boolean,
     onClickAddToCart: (Game) -> Unit
 ) {
     Scaffold(
@@ -173,18 +174,20 @@ fun GameDetailsScreen(
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                DefaultTextButton(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(24.dp),
-                    containerColor = MaterialTheme.colorScheme.secondary,
-                    contentColor = MaterialTheme.colorScheme.onSecondary,
-                    text = if (isInTheCart) {
-                        "Remove from shopping kart"
-                    } else "Add to shopping kart"
-                ) {
-                    onClickAddToCart.invoke(game)
-                    navController.navigateUp()
+                if (isFinishedOrder.not()) {
+                    DefaultTextButton(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(24.dp),
+                        containerColor = MaterialTheme.colorScheme.secondary,
+                        contentColor = MaterialTheme.colorScheme.onSecondary,
+                        text = if (isInTheCart) {
+                            "Remove from shopping kart"
+                        } else "Add to shopping kart"
+                    ) {
+                        onClickAddToCart.invoke(game)
+                        navController.navigateUp()
+                    }
                 }
             }
         }

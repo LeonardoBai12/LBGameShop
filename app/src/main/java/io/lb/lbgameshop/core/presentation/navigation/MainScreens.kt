@@ -8,5 +8,6 @@ enum class MainScreens {
     GamesScreen,
     GameDetailsScreen,
     NewOrderScreen,
+    OrderDetailsScreen,
     MyOrdersScreen
 }

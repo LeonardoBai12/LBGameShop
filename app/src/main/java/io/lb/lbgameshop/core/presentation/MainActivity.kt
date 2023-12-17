@@ -29,15 +29,22 @@ import dagger.hilt.android.AndroidEntryPoint
 import io.lb.lbgameshop.R
 import io.lb.lbgameshop.core.presentation.navigation.MainScreens
 import io.lb.lbgameshop.core.util.GAME
+import io.lb.lbgameshop.core.util.ORDER
+import io.lb.lbgameshop.core.util.ORDER_ITEMS
 import io.lb.lbgameshop.core.util.Toaster
+import io.lb.lbgameshop.core.util.toOrderItemList
 import io.lb.lbgameshop.game.domain.model.Game
 import io.lb.lbgameshop.game.presentation.details.GameDetailsScreen
 import io.lb.lbgameshop.game.presentation.listing.GameEvent
 import io.lb.lbgameshop.game.presentation.listing.GamesScreen
 import io.lb.lbgameshop.game.presentation.listing.GamesViewModel
+import io.lb.lbgameshop.order.domain.model.Order
+import io.lb.lbgameshop.order.presentation.my_orders.MyOrdersScreen
+import io.lb.lbgameshop.order.presentation.my_orders.MyOrdersViewModel
 import io.lb.lbgameshop.order.presentation.new_order.NewOrderEvent
 import io.lb.lbgameshop.order.presentation.new_order.NewOrderScreen
 import io.lb.lbgameshop.order.presentation.new_order.NewOrderViewModel
+import io.lb.lbgameshop.order.presentation.widgets.OrderDetailsScreen
 import io.lb.lbgameshop.sign_in.presentation.SignInScreen
 import io.lb.lbgameshop.sign_in.presentation.sing_in.SignInEvent
 import io.lb.lbgameshop.sign_in.presentation.sing_in.SignInViewModel
@@ -77,6 +84,9 @@ class MainActivity : ComponentActivity() {
 
                     val newOrderViewModel = hiltViewModel<NewOrderViewModel>()
                     val newOrderState = newOrderViewModel.state.collectAsState().value
+
+                    val myOrdersViewModel = hiltViewModel<MyOrdersViewModel>()
+                    val myOrdersState = myOrdersViewModel.state.collectAsState().value
 
                     var startDestination = MainScreens.SignInScreen.name
 
@@ -189,6 +199,9 @@ class MainActivity : ComponentActivity() {
                                         }
                                     }
                                 },
+                                onClickMyOrders = {
+
+                                },
                                 onClickTryAgain = {
                                     gameViewModel.getGames()
                                 },
@@ -211,6 +224,7 @@ class MainActivity : ComponentActivity() {
                         ) { backStackEntry ->
                             backStackEntry.arguments?.getString(GAME)?.let { json ->
                                 val gameFromJson = Game.fromJson(json)
+                                val isFinishedOrder = newOrderState.order.isFinished
                                 val isInTheCart = newOrderState.items.any {
                                     Game.fromJson(it.data).gameID == gameFromJson.gameID
                                 }
@@ -219,6 +233,7 @@ class MainActivity : ComponentActivity() {
                                     navController = navController,
                                     game = gameFromJson,
                                     isInTheCart = isInTheCart,
+                                    isFinishedOrder = isFinishedOrder,
                                     onClickAddToCart = { game ->
                                         if (isInTheCart.not()) {
                                             newOrderViewModel.onEvent(
@@ -286,6 +301,37 @@ class MainActivity : ComponentActivity() {
                                 onClickFinish = {
                                     newOrderViewModel.onEvent(NewOrderEvent.FinishOrder)
                                 }
+                            )
+                        }
+
+                        composable(route = MainScreens.MyOrdersScreen.name) {
+                            MyOrdersScreen(
+
+                            )
+                        }
+
+                        composable(
+                            route = MainScreens.OrderDetailsScreen.name + "/{$ORDER}/{$ORDER_ITEMS}",
+                            arguments = listOf(
+                                navArgument(name = ORDER) {
+                                    type = NavType.StringType
+                                },
+                                navArgument(name = ORDER_ITEMS) {
+                                    type = NavType.StringType
+                                }
+                            )
+                        ) { backStackEntry ->
+                            val order = Order.fromJson(
+                                backStackEntry.arguments?.getString(ORDER) ?: ""
+                            )
+                            val items = backStackEntry.arguments
+                                ?.getString(ORDER_ITEMS)
+                                ?.toOrderItemList() ?: emptyList()
+
+                            OrderDetailsScreen(
+                                navController = navController,
+                                order = order,
+                                items = items
                             )
                         }
                     }

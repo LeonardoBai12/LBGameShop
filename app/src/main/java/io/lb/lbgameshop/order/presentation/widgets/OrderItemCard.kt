@@ -1,6 +1,5 @@
 package io.lb.lbgameshop.order.presentation.widgets
 
-import android.widget.Space
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -38,13 +37,11 @@ import io.lb.lbgameshop.game.presentation.SalePriceText
 @Composable
 fun OrderItemCard(
     game: Game,
-    onClickDelete: () -> Unit,
-    onClickCard: (Game) -> Unit,
+    onClickDelete: (() -> Unit)? = null,
+    onClickCard: ((Game) -> Unit)? = null,
 ) {
     SwipeableCard(
-        onClickSwiped = {
-            onClickDelete.invoke()
-        },
+        onClickSwiped = onClickDelete,
         swipedContent = {
             Row(
                 modifier = Modifier.padding(6.dp),
@@ -59,12 +56,11 @@ fun OrderItemCard(
             }
         },
         onClickCard = {
-            onClickCard.invoke(game)
-        },
-        cardContent = {
-            OrderItemCardContent(game)
+            onClickCard?.invoke(game)
         }
-    )
+    ) {
+        OrderItemCardContent(game)
+    }
 }
 
 @Composable
