@@ -14,6 +14,7 @@ The application is built using the following technologies:
 
 * [Coroutines](https://kotlinlang.org/docs/coroutines-overview.html) for asynchronous programming.
 * [ViewModel](https://developer.android.com/reference/androidx/lifecycle/ViewModel) for managing UI-related data.
+* [Retrofit](https://square.github.io/retrofit) for consuming RESTful web services.
 * [Jetpack Compose](https://developer.android.com/jetpack/compose/documentation) for building the UI.
 * [Hilt](https://developer.android.com/training/dependency-injection/hilt-android) for dependency injection.
 * [Firebase Realtime Database](https://firebase.google.com/docs/database?hl=pt-br) for Cloud storage.
@@ -29,7 +30,7 @@ The application is built using the following technologies:
 
 1. Download the LBGameShop.apk file from the [Build and Deploy APK](https://github.com/LeonardoBai12/LBGameShop/actions/workflows/build_and_deploy_workflow.yml) action artifacts.
 2. Install the APK on your Android device.
-3. Use the application to schedule your make some game orders. =)
+3. Use the application to make some game orders. =)
 
 ## Quality Assurance
 

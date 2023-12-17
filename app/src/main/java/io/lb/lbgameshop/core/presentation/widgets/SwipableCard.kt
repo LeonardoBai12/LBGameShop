@@ -37,9 +37,9 @@ import kotlin.math.roundToInt
 @ExperimentalMaterial3Api
 @Composable
 fun SwipeableCard(
-    onClickSwiped: () -> Unit,
+    onClickSwiped: (() -> Unit)? = null,
     swipedContent: @Composable (() -> Unit),
-    onClickCard: () -> Unit,
+    onClickCard: (() -> Unit)? = null,
     cardContent: @Composable (ColumnScope.() -> Unit),
 ) {
     val isSwiped = remember {
@@ -73,12 +73,12 @@ fun SwipeableCard(
     val scope = rememberCoroutineScope()
 
     Surface {
-        if (offsetTransition.value > 0) {
+        if (offsetTransition.value > 0 && onClickSwiped != null) {
             Surface(
                 modifier = Modifier
                     .height(swipeHeight.value.toDp(LocalDensity.current))
                     .fillMaxWidth(0.3F)
-                    .padding(horizontal = 12.dp),
+                    .padding(horizontal = 6.dp),
                 shape = RoundedCornerShape(16.dp),
                 color = MaterialTheme.colorScheme.errorContainer,
                 onClick = {
@@ -93,37 +93,43 @@ fun SwipeableCard(
         }
 
         DefaultCard(
-            modifier = Modifier
+            modifier =
+            onClickSwiped?.let {
+                Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 12.dp)
+                    .padding(bottom = 12.dp)
+                    .offset {
+                        IntOffset(offsetTransition.value.roundToInt(), 0)
+                    }
+                    .pointerInput(Unit) {
+                        detectHorizontalDragGestures { _, dragAmount ->
+                            when {
+                                dragAmount >= 6 -> {
+                                    isSwiped.value = true
+                                }
+
+                                dragAmount < -6 -> {
+                                    isSwiped.value = false
+                                }
+                            }
+                        }
+                    }
+                    .layout { measurable, constraints ->
+                        with(measurable.measure(constraints)) {
+                            swipeHeight.value = height
+
+                            layout(width, height) {
+                                placeRelative(0, 0)
+                            }
+                        }
+                    }
+            } ?: Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 12.dp)
-                .padding(bottom = 12.dp)
-                .offset {
-                    IntOffset(offsetTransition.value.roundToInt(), 0)
-                }
-                .pointerInput(Unit) {
-                    detectHorizontalDragGestures { _, dragAmount ->
-                        when {
-                            dragAmount >= 6 -> {
-                                isSwiped.value = true
-                            }
-
-                            dragAmount < -6 -> {
-                                isSwiped.value = false
-                            }
-                        }
-                    }
-                }
-                .layout { measurable, constraints ->
-                    with(measurable.measure(constraints)) {
-                        swipeHeight.value = height
-
-                        layout(width, height) {
-                            placeRelative(0, 0)
-                        }
-                    }
-                },
+                .padding(bottom = 12.dp),
             onClick = {
-                onClickCard.invoke()
+                onClickCard?.invoke()
             },
             content = cardContent
         )

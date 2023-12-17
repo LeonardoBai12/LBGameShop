@@ -10,6 +10,9 @@
     <string name="sign_in_successful">Sign in successful</string>
     <string name="something_went_wrong">Oops! Something went wrong!</string>
     <string name="signed_out">Signed out</string>
+    <string name="my_orders">My Orders</string>
     <string name="logout">Logout</string>
     <string name="home">Home</string>
+    <string name="undo">Undo</string>
+    <string name="item_deleted">Item deleted</string>
 </resources>

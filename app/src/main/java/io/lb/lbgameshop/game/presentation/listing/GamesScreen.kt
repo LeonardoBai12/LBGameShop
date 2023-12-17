@@ -2,12 +2,16 @@ package io.lb.lbgameshop.game.presentation.listing
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.GridItemSpan
+import androidx.compose.foundation.lazy.grid.LazyGridScope
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.SnackbarHost
-import androidx.compose.material.SnackbarHostState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ExitToApp
 import androidx.compose.material.icons.filled.Home
@@ -20,6 +24,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
@@ -30,10 +36,13 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
 import io.lb.lbgameshop.R
 import io.lb.lbgameshop.core.presentation.navigation.DrawerBody
 import io.lb.lbgameshop.core.presentation.navigation.DrawerHeader
+import io.lb.lbgameshop.core.presentation.navigation.MainScreens
 import io.lb.lbgameshop.core.presentation.navigation.MenuItem
+import io.lb.lbgameshop.core.presentation.widgets.DefaultErrorScreen
 import io.lb.lbgameshop.core.presentation.widgets.OrderAppBar
 import io.lb.lbgameshop.core.util.DefaultSearchBar
 import io.lb.lbgameshop.sign_in.domain.model.UserData
@@ -43,9 +52,15 @@ import kotlinx.coroutines.launch
 @ExperimentalMaterial3Api
 @ExperimentalMaterialApi
 @Composable
-fun GamersScreen(
+fun GamesScreen(
+    navController: NavHostController,
     userData: UserData?,
+    state: GameState,
     onSignOut: () -> Unit,
+    onClickMyOrders: () -> Unit,
+    onClickTryAgain: () -> Unit,
+    onSearchGame: (String) -> Unit,
+    onClickFab: () -> Unit
 ) {
     val coroutineScope = rememberCoroutineScope()
     val search = remember {
@@ -71,6 +86,12 @@ fun GamersScreen(
                             icon = Icons.Default.Home
                         ),
                         MenuItem(
+                            id = "My Orders",
+                            title = stringResource(id = R.string.my_orders),
+                            contentDescription = "My Orders Button",
+                            icon = Icons.Default.ShoppingCart
+                        ),
+                        MenuItem(
                             id = "Logout",
                             title = stringResource(id = R.string.logout),
                             contentDescription = "Logout Button",
@@ -84,7 +105,9 @@ fun GamersScreen(
                                     drawerState.close()
                                 }
                             }
-
+                            "My Orders" -> {
+                                onClickMyOrders.invoke()
+                            }
                             "Logout" -> {
                                 onSignOut.invoke()
                             }
@@ -110,6 +133,7 @@ fun GamersScreen(
                 FloatingActionButton(
                     containerColor = MaterialTheme.colorScheme.primary,
                     onClick = {
+                        onClickFab.invoke()
                     },
                 ) {
                     Icon(
@@ -119,11 +143,11 @@ fun GamersScreen(
                     )
                 }
             },
-        ) {
+        ) { padding ->
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(it),
+                    .padding(padding),
                 verticalArrangement = Arrangement.Top,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
@@ -135,12 +159,65 @@ fun GamersScreen(
                         bottom = 16.dp
                     ),
                     onSearch = { filter ->
+                        onSearchGame.invoke(filter)
                     },
                 )
 
-                LazyColumn {
+                LazyVerticalGrid(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(horizontal = 12.dp),
+                    columns = GridCells.Fixed(2),
+                    verticalArrangement = Arrangement.Top,
+                ) {
+                    if (!state.loading) {
+                        state.games.takeIf { games ->
+                            games.isNotEmpty()
+                        }?.let {
+                            gamesColumn(navController, state)
+                        } ?: run {
+                            if (search.value.isBlank()) {
+                                item(span = { GridItemSpan(2) }) {
+                                    DefaultErrorScreen {
+                                        onClickTryAgain.invoke()
+                                    }
+                                }
+                            }
+                        }
+                    } else {
+                        gamesShimmerColumn()
+                    }
                 }
             }
+        }
+    }
+}
+
+private fun LazyGridScope.gamesShimmerColumn() {
+    items(5) {
+        Column {
+            GameShimmerCard()
+            Spacer(modifier = Modifier.height(16.dp))
+        }
+    }
+}
+
+@ExperimentalMaterial3Api
+private fun LazyGridScope.gamesColumn(
+    navController: NavHostController,
+    state: GameState
+) {
+    items(state.games) { game ->
+        Column {
+            GameCard(
+                game = game,
+                onClick = {
+                    navController.navigate(
+                        MainScreens.GameDetailsScreen.name + "/${game.toJsonEncode()}"
+                    )
+                },
+            )
+            Spacer(modifier = Modifier.height(8.dp))
         }
     }
 }
