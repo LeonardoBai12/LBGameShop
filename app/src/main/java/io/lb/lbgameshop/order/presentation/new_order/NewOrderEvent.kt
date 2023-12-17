@@ -7,4 +7,5 @@ sealed class NewOrderEvent {
     data class RequestInsert(val game: Game) : NewOrderEvent()
     data class RequestDelete(val orderItem: OrderItem) : NewOrderEvent()
     object RestoreTask : NewOrderEvent()
+    object FinishOrder : NewOrderEvent()
 }

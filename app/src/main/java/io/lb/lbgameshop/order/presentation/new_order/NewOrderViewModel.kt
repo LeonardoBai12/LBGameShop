@@ -9,9 +9,12 @@ import io.lb.lbgameshop.order.domain.model.Order
 import io.lb.lbgameshop.order.domain.model.OrderItem
 import io.lb.lbgameshop.order.domain.use_cases.OrderUseCases
 import io.lb.lbgameshop.sign_in.domain.model.UserData
+import io.lb.lbgameshop.sign_in.presentation.sing_in.SignInViewModel
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
@@ -28,11 +31,19 @@ class NewOrderViewModel @Inject constructor(
     private var getItemsJob: Job? = null
     private var getOrderJob: Job? = null
 
+    private val _eventFlow = MutableSharedFlow<UiEvent>()
+    val eventFlow = _eventFlow.asSharedFlow()
+
     private var recentlyDeletedItem: OrderItem? = null
     var userData: UserData? = null
 
     init {
         getOrder()
+    }
+
+    sealed class UiEvent {
+        data class ShowToast(val message: String) : UiEvent()
+        object Finish : UiEvent()
     }
 
     fun onEvent(event: NewOrderEvent) {
@@ -52,6 +63,27 @@ class NewOrderViewModel @Inject constructor(
             is NewOrderEvent.RequestInsert -> {
                 insertGame(event)
             }
+
+            NewOrderEvent.FinishOrder -> {
+                finishOrder()
+            }
+        }
+    }
+
+    private fun finishOrder() {
+        viewModelScope.launch {
+            try {
+                useCases.finishOrderUseCase(
+                    userData ?: return@launch,
+                    state.value.order,
+                    state.value.items
+                )
+                _eventFlow.emit(UiEvent.ShowToast("Order finished successfully"))
+                _eventFlow.emit(UiEvent.Finish)
+            } catch (e: Exception) {
+                _eventFlow.emit(UiEvent.ShowToast(e.message ?: ""))
+            }
+            clearState()
         }
     }
 
@@ -145,7 +177,7 @@ class NewOrderViewModel @Inject constructor(
         }
     }
 
-    fun clearState() {
+    private fun clearState() {
         _state.update { NewOrderState() }
     }
 }

@@ -247,6 +247,19 @@ class MainActivity : ComponentActivity() {
                                 }
                             }
 
+                            LaunchedEffect(key1 = "launchedEffectKey") {
+                                newOrderViewModel.eventFlow.collectLatest { event ->
+                                    when (event) {
+                                        NewOrderViewModel.UiEvent.Finish -> {
+                                            navController.navigateUp()
+                                        }
+                                        is NewOrderViewModel.UiEvent.ShowToast -> {
+                                            toaster.showToast(event.message)
+                                        }
+                                    }
+                                }
+                            }
+
                             val userData = signInViewModel.currentUser
                             newOrderViewModel.userData = userData
 
@@ -271,7 +284,7 @@ class MainActivity : ComponentActivity() {
                                     newOrderViewModel.onEvent(NewOrderEvent.RestoreTask)
                                 },
                                 onClickFinish = {
-
+                                    newOrderViewModel.onEvent(NewOrderEvent.FinishOrder)
                                 }
                             )
                         }

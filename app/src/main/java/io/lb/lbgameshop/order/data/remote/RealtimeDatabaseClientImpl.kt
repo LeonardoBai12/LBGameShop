@@ -77,10 +77,10 @@ class RealtimeDatabaseClientImpl(
     override suspend fun finishOrder(userData: UserData, order: Order) {
         database.child(userData.userId ?: return)
             .child(order.uuid)
-            .setValue(
-                order.copy(
-                    isFinished = true,
-                    finishedDate = Calendar.getInstance().timeInMillis.toString()
+            .updateChildren(
+                mapOf(
+                    "isFinished" to "true",
+                    "finishedDate" to Calendar.getInstance().timeInMillis.toString(),
                 )
             )
             .await()
@@ -99,18 +99,12 @@ class RealtimeDatabaseClientImpl(
         val result = database.child(userData.userId ?: return@flow).get().await()
         val orders = result.children.map {
             Order.fromSnapshot(it.value as HashMap<String, String>)
-        }
+        }.filter { it.isFinished.not() }
 
         if (orders.isNotEmpty()) {
             emit(
                 Resource.Success(
-                    data = orders.first { it.isFinished.not() }
-                )
-            )
-        } else {
-            emit(
-                Resource.Error(
-                    "There are no unfinished orders."
+                    data = orders.first()
                 )
             )
         }
