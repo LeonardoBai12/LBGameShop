@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.Flow
 class GetItemsFromOrderUseCase(
     val repository: OrderRepository
 ) {
-    fun invoke(userData: UserData, order: Order): Flow<Resource<List<OrderItem>>> {
+    operator fun invoke(userData: UserData, order: Order): Flow<Resource<List<OrderItem>>> {
         return repository.getItemsFromOrder(userData, order)
     }
 }
