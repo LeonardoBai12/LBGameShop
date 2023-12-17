@@ -178,7 +178,7 @@ class MainActivity : ComponentActivity() {
                                     gameViewModel.getGames()
                                 },
                                 onSearchTask = { filter ->
-                                    gameViewModel.onEvent(GameEvent.SearchedForTask(filter))
+                                    gameViewModel.onEvent(GameEvent.SearchedForGame(filter))
                                 }
                             )
                         }

@@ -44,7 +44,7 @@ class GamesViewModel @Inject constructor(
 
     fun onEvent(event: GameEvent) {
         when (event) {
-            is GameEvent.SearchedForTask -> {
+            is GameEvent.SearchedForGame -> {
                 searchJob?.cancel()
                 searchJob = viewModelScope.launch {
                     event.filter.takeIf {

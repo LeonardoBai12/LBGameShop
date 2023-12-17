@@ -3,15 +3,27 @@ package io.lb.lbgameshop.order.data.repository
 import io.lb.lbgameshop.core.util.Resource
 import io.lb.lbgameshop.order.data.remote.RealtimeDatabaseClient
 import io.lb.lbgameshop.order.domain.model.Order
+import io.lb.lbgameshop.order.domain.model.OrderItem
 import io.lb.lbgameshop.order.domain.repository.OrderRepository
 import io.lb.lbgameshop.sign_in.domain.model.UserData
 import kotlinx.coroutines.flow.Flow
 
 class OrderRepositoryImpl(
-    val client: RealtimeDatabaseClient
+    private val client: RealtimeDatabaseClient
 ) : OrderRepository {
-    override suspend fun addOrderItem(userData: UserData, order: Order) {
-        client.addOrderItem(userData, order)
+    override fun getItemsFromOrder(
+        userData: UserData,
+        order: Order
+    ): Flow<Resource<List<OrderItem>>> {
+        return client.getItemsFromOrder(userData, order)
+    }
+
+    override suspend fun addOrderItem(userData: UserData, orderItem: OrderItem) {
+        client.addOrderItem(userData, orderItem)
+    }
+
+    override suspend fun removeOrderItem(userData: UserData, orderItem: OrderItem) {
+        client.removeOrderItem(userData, orderItem)
     }
 
     override suspend fun finishOrder(userData: UserData, order: Order) {
