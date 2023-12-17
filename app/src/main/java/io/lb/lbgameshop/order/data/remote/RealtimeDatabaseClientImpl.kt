@@ -127,6 +127,7 @@ class RealtimeDatabaseClientImpl(
                         Order::createdDate,
                     )
                 ).filter { it.isFinished }
+                    .reversed()
             )
         )
 
