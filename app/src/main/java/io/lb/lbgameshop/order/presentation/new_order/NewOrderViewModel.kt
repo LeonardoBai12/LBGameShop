@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.lb.lbgameshop.core.util.Resource
+import io.lb.lbgameshop.order.domain.model.Order
 import io.lb.lbgameshop.order.domain.model.OrderItem
 import io.lb.lbgameshop.order.domain.use_cases.OrderUseCases
 import io.lb.lbgameshop.sign_in.domain.model.UserData
@@ -29,11 +30,15 @@ class NewOrderViewModel @Inject constructor(
     private var recentlyDeletedItem: OrderItem? = null
     var userData: UserData? = null
 
+    init {
+        getOrder()
+    }
+
     fun onEvent(event: NewOrderEvent) {
         when (event) {
             is NewOrderEvent.RequestDelete -> {
                 with(event.orderItem) {
-                    deleteTask(this)
+                    deleteGame(this)
                     recentlyDeletedItem = this
                 }
             }
@@ -42,12 +47,31 @@ class NewOrderViewModel @Inject constructor(
                     restoreOrderItem(it)
                 }
             }
+
+            is NewOrderEvent.RequestInsert -> {
+                insertGame(event)
+            }
+        }
+    }
+
+    private fun insertGame(event: NewOrderEvent.RequestInsert) {
+        viewModelScope.launch {
+            userData?.let {
+                useCases.addOrderItemUseCase(
+                    it,
+                    state.value.order,
+                    event.game
+                )
+            }
         }
     }
 
     fun getOrderItems(userData: UserData) {
         getItemsJob?.cancel()
-        getItemsJob = useCases.getItemsFromOrderUseCase(userData, state.value.order).onEach { result ->
+        getItemsJob = useCases.getItemsFromOrderUseCase(
+            userData,
+            state.value.order
+        ).onEach { result ->
             when (result) {
                 is Resource.Success -> {
                     result.data?.let { items ->
@@ -71,9 +95,11 @@ class NewOrderViewModel @Inject constructor(
         }.launchIn(viewModelScope)
     }
 
-    fun getOrder(userData: UserData) {
+    fun getOrder() {
+        userData ?: return
+
         getOrderJob?.cancel()
-        getOrderJob = useCases.getUnfinishedOrderUseCase(userData).onEach { result ->
+        getOrderJob = useCases.getUnfinishedOrderUseCase(userData!!).onEach { result ->
             when (result) {
                 is Resource.Success -> {
                     result.data?.let { order ->
@@ -105,16 +131,14 @@ class NewOrderViewModel @Inject constructor(
                     order = state.value.order,
                     game = orderItem.data
                 )
-                getOrder(it)
             }
         }
     }
 
-    private fun deleteTask(orderItem: OrderItem) {
+    private fun deleteGame(orderItem: OrderItem) {
         viewModelScope.launch {
             userData?.let {
                 useCases.removeOrderItemUseCase(it, orderItem)
-                getOrder(it)
             }
         }
     }

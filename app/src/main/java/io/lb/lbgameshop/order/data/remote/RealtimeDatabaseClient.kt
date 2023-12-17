@@ -8,7 +8,11 @@ import kotlinx.coroutines.flow.Flow
 
 interface RealtimeDatabaseClient {
     fun getItemsFromOrder(userData: UserData, order: Order) : Flow<Resource<List<OrderItem>>>
-    suspend fun addOrderItem(userData: UserData, orderItem: OrderItem)
+    suspend fun addOrderItem(
+        userData: UserData,
+        order: Order,
+        orderItem: OrderItem
+    )
     suspend fun removeOrderItem(userData: UserData, orderItem: OrderItem)
     suspend fun finishOrder(userData: UserData, order: Order)
     suspend fun resetUnfinishedOrder(userData: UserData, order: Order)

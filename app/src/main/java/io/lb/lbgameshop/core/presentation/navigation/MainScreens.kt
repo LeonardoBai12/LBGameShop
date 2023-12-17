@@ -6,5 +6,7 @@ package io.lb.lbgameshop.core.presentation.navigation
 enum class MainScreens {
     SignInScreen,
     GamesScreen,
-    GameDetailsScreen;
+    GameDetailsScreen,
+    NewOrderScreen,
+    MyOrdersScreen
 }

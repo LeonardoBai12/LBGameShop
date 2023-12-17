@@ -58,7 +58,7 @@ fun GamesScreen(
     state: GameState,
     onSignOut: () -> Unit,
     onClickTryAgain: () -> Unit,
-    onSearchTask: (String) -> Unit
+    onSearchGame: (String) -> Unit
 ) {
     val coroutineScope = rememberCoroutineScope()
     val search = remember {
@@ -148,7 +148,7 @@ fun GamesScreen(
                         bottom = 16.dp
                     ),
                     onSearch = { filter ->
-                        onSearchTask.invoke(filter)
+                        onSearchGame.invoke(filter)
                     },
                 )
 

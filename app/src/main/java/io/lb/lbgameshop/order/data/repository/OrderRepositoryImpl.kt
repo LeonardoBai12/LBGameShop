@@ -18,8 +18,12 @@ class OrderRepositoryImpl(
         return client.getItemsFromOrder(userData, order)
     }
 
-    override suspend fun addOrderItem(userData: UserData, orderItem: OrderItem) {
-        client.addOrderItem(userData, orderItem)
+    override suspend fun addOrderItem(
+        userData: UserData,
+        order: Order,
+        orderItem: OrderItem
+    ) {
+        client.addOrderItem(userData, order, orderItem)
     }
 
     override suspend fun removeOrderItem(userData: UserData, orderItem: OrderItem) {

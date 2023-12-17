@@ -17,7 +17,9 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -33,6 +35,9 @@ import io.lb.lbgameshop.game.presentation.details.OrderDetailsScreen
 import io.lb.lbgameshop.game.presentation.listing.GameEvent
 import io.lb.lbgameshop.game.presentation.listing.GamesScreen
 import io.lb.lbgameshop.game.presentation.listing.GamesViewModel
+import io.lb.lbgameshop.order.presentation.my_order.MyOrdersScreen
+import io.lb.lbgameshop.order.presentation.new_order.NewOrderEvent
+import io.lb.lbgameshop.order.presentation.new_order.NewOrderViewModel
 import io.lb.lbgameshop.sign_in.presentation.SignInScreen
 import io.lb.lbgameshop.sign_in.presentation.sing_in.SignInEvent
 import io.lb.lbgameshop.sign_in.presentation.sing_in.SignInViewModel
@@ -70,10 +75,14 @@ class MainActivity : ComponentActivity() {
                     val gameViewModel = hiltViewModel<GamesViewModel>()
                     val gameState = gameViewModel.state.collectAsState().value
 
+                    val newOrderViewModel = hiltViewModel<NewOrderViewModel>()
+                    val newOrderState = newOrderViewModel.state.collectAsState().value
+
                     var startDestination = MainScreens.SignInScreen.name
 
                     signInViewModel.currentUser?.let {
                         startDestination = MainScreens.GamesScreen.name
+                        newOrderViewModel.userData = it
                     }
 
                     NavHost(
@@ -149,6 +158,12 @@ class MainActivity : ComponentActivity() {
                             signInViewModel.onEvent(SignInEvent.LoadSignedInUser)
                             val userData = signInViewModel.currentUser
 
+                            LaunchedEffect(key1 = "repeatOnLifecycleGetOrder") {
+                                lifecycle.repeatOnLifecycle(Lifecycle.State.RESUMED) {
+                                    newOrderViewModel.getOrder()
+                                }
+                            }
+
                             LaunchedEffect(key1 = MainScreens.GamesScreen.name) {
                                 gameViewModel.eventFlow.collectLatest { event ->
                                     when (event) {
@@ -177,7 +192,7 @@ class MainActivity : ComponentActivity() {
                                 onClickTryAgain = {
                                     gameViewModel.getGames()
                                 },
-                                onSearchTask = { filter ->
+                                onSearchGame = { filter ->
                                     gameViewModel.onEvent(GameEvent.SearchedForGame(filter))
                                 }
                             )
@@ -195,10 +210,22 @@ class MainActivity : ComponentActivity() {
                                 OrderDetailsScreen(
                                     navController = navController,
                                     game = Game.fromJson(it),
-                                    onClickAddToCart = {
+                                    onClickAddToCart = { game ->
+                                        newOrderViewModel.onEvent(
+                                            NewOrderEvent.RequestInsert(game)
+                                        )
                                     }
                                 )
                             }
+                        }
+
+                        composable(
+                            route = MainScreens.NewOrderScreen.name
+                        ) {
+                            val userData = signInViewModel.currentUser
+                            newOrderViewModel.userData = userData
+
+                            MyOrdersScreen(newOrderState)
                         }
                     }
                 }

@@ -7,9 +7,8 @@ import java.util.UUID
 
 data class OrderItem(
     val uuid: String = UUID.randomUUID().toString(),
-    val orderItemId: Int = UUID.fromString(uuid).variant(),
     val orderId: String,
-    val createdDate: Long = Calendar.getInstance().timeInMillis,
+    val createdDate: String = Calendar.getInstance().timeInMillis.toString(),
     val data: Game
 ) {
     companion object {
@@ -18,9 +17,8 @@ data class OrderItem(
         fun fromSnapshot(hashMap: HashMap<String, String>): OrderItem {
             return OrderItem(
                 uuid = hashMap["uuid"] ?: "",
-                orderItemId = hashMap["orderItemId"]?.toInt() ?: 0,
                 orderId = hashMap["orderId"] ?: "",
-                createdDate = hashMap["createdDate"]?.toLong() ?: 0L,
+                createdDate = hashMap["createdDate"] ?: "",
                 data = Game.fromJson(hashMap["data"] ?: "")
             )
         }

@@ -19,6 +19,6 @@ class AddOrderItemUseCase(
             data = game
         )
 
-        repository.addOrderItem(userData, orderItem)
+        repository.addOrderItem(userData, order, orderItem)
     }
 }

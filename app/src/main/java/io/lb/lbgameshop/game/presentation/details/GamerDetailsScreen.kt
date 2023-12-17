@@ -41,7 +41,7 @@ import io.lb.lbgameshop.game.presentation.SalePriceText
 fun OrderDetailsScreen(
     navController: NavHostController,
     game: Game,
-    onClickAddToCart: () -> Unit
+    onClickAddToCart: (Game) -> Unit
 ) {
     Scaffold(
         containerColor = MaterialTheme.colorScheme.background,
@@ -180,7 +180,8 @@ fun OrderDetailsScreen(
                     contentColor = MaterialTheme.colorScheme.onSecondary,
                     text = "Add to Cart"
                 ) {
-                    onClickAddToCart.invoke()
+                    onClickAddToCart.invoke(game)
+                    navController.navigateUp()
                 }
             }
         }

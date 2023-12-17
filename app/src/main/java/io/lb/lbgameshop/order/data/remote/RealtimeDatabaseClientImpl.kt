@@ -5,6 +5,7 @@ import io.lb.lbgameshop.core.util.Resource
 import io.lb.lbgameshop.order.domain.model.Order
 import io.lb.lbgameshop.order.domain.model.OrderItem
 import io.lb.lbgameshop.sign_in.domain.model.UserData
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.tasks.await
@@ -40,9 +41,24 @@ class RealtimeDatabaseClientImpl(
         emit(Resource.Loading(false))
     }
 
-    override suspend fun addOrderItem(userData: UserData, orderItem: OrderItem) {
+    override suspend fun addOrderItem(
+        userData: UserData,
+        order: Order,
+        orderItem: OrderItem
+    ) {
         database.child(userData.userId ?: return)
-            .child(orderItem.orderId)
+            .child(order.uuid)
+            .updateChildren(
+                mapOf(
+                    "uuid" to order.uuid,
+                    "isFinished" to order.isFinished.toString(),
+                    "createdDate" to order.createdDate,
+                )
+            )
+            .await()
+
+        database.child(userData.userId)
+            .child(order.uuid)
             .child("orderItems")
             .child(orderItem.uuid)
             .setValue(orderItem)
@@ -63,7 +79,7 @@ class RealtimeDatabaseClientImpl(
             .setValue(
                 order.copy(
                     isFinished = true,
-                    finishedDate = Calendar.getInstance().timeInMillis
+                    finishedDate = Calendar.getInstance().timeInMillis.toString()
                 )
             )
             .await()
