@@ -7,7 +7,7 @@ import io.lb.lbgameshop.sign_in.domain.model.UserData
 import kotlinx.coroutines.flow.Flow
 
 interface OrderRepository {
-    fun getItemsFromOrder(userData: UserData, order: Order) : Flow<Resource<List<OrderItem>>>
+    fun getItemsFromOrder(userData: UserData, order: Order): Flow<Resource<List<OrderItem>>>
     suspend fun addOrderItem(
         userData: UserData,
         order: Order,

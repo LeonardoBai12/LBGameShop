@@ -7,7 +7,7 @@ import io.lb.lbgameshop.sign_in.domain.model.UserData
 import kotlinx.coroutines.flow.Flow
 
 interface RealtimeDatabaseClient {
-    fun getItemsFromOrder(userData: UserData, order: Order) : Flow<Resource<List<OrderItem>>>
+    fun getItemsFromOrder(userData: UserData, order: Order): Flow<Resource<List<OrderItem>>>
     suspend fun addOrderItem(
         userData: UserData,
         order: Order,
@@ -16,6 +16,6 @@ interface RealtimeDatabaseClient {
     suspend fun removeOrderItem(userData: UserData, orderItem: OrderItem)
     suspend fun finishOrder(userData: UserData, order: Order)
     suspend fun resetUnfinishedOrder(userData: UserData, order: Order)
-    fun getUnfinishedOrder(userData: UserData) : Flow<Resource<Order?>>
-    fun getFinishedOrders(userData: UserData) : Flow<Resource<List<Order>>>
+    fun getUnfinishedOrder(userData: UserData): Flow<Resource<Order?>>
+    fun getFinishedOrders(userData: UserData): Flow<Resource<List<Order>>>
 }

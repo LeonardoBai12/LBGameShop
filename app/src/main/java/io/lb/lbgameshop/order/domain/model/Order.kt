@@ -1,7 +1,6 @@
 package io.lb.lbgameshop.order.domain.model
 
 import com.google.gson.Gson
-import io.lb.lbgameshop.core.util.toOrderItemList
 import java.util.Calendar
 import java.util.UUID
 

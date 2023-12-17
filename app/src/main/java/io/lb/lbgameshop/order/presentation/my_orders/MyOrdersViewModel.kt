@@ -7,8 +7,6 @@ import io.lb.lbgameshop.core.util.Resource
 import io.lb.lbgameshop.order.domain.model.Order
 import io.lb.lbgameshop.order.domain.model.OrderItem
 import io.lb.lbgameshop.order.domain.use_cases.OrderUseCases
-import io.lb.lbgameshop.order.presentation.new_order.NewOrderState
-import io.lb.lbgameshop.order.presentation.new_order.NewOrderViewModel
 import io.lb.lbgameshop.sign_in.domain.model.UserData
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableSharedFlow

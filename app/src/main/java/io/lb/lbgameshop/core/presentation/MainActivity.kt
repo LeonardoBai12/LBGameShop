@@ -320,8 +320,8 @@ class MainActivity : ComponentActivity() {
                                         is MyOrdersViewModel.UiEvent.NavigateToOrderDetails -> {
                                             navController.navigate(
                                                 MainScreens.OrderDetailsScreen.name +
-                                                        "/${event.order.toJson()}" +
-                                                        "/${event.items.toJson()}"
+                                                    "/${event.order.toJson()}" +
+                                                    "/${event.items.toJson()}"
                                             )
                                         }
                                     }

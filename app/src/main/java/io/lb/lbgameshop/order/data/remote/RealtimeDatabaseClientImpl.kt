@@ -5,7 +5,6 @@ import io.lb.lbgameshop.core.util.Resource
 import io.lb.lbgameshop.order.domain.model.Order
 import io.lb.lbgameshop.order.domain.model.OrderItem
 import io.lb.lbgameshop.sign_in.domain.model.UserData
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.tasks.await
@@ -93,7 +92,7 @@ class RealtimeDatabaseClientImpl(
             .await()
     }
 
-    override fun getUnfinishedOrder(userData: UserData) : Flow<Resource<Order?>> = flow {
+    override fun getUnfinishedOrder(userData: UserData): Flow<Resource<Order?>> = flow {
         emit(Resource.Loading(true))
 
         val result = database.child(userData.userId ?: return@flow).get().await()

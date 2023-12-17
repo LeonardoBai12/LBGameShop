@@ -99,7 +99,6 @@ fun SwipeableCard(
                     .fillMaxWidth()
                     .padding(horizontal = 12.dp)
                     .padding(bottom = 12.dp)
-
                     .offset {
                         IntOffset(offsetTransition.value.roundToInt(), 0)
                     }

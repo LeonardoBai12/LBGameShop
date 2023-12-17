@@ -5,11 +5,9 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.lb.lbgameshop.core.util.Resource
 import io.lb.lbgameshop.game.domain.model.Game
-import io.lb.lbgameshop.order.domain.model.Order
 import io.lb.lbgameshop.order.domain.model.OrderItem
 import io.lb.lbgameshop.order.domain.use_cases.OrderUseCases
 import io.lb.lbgameshop.sign_in.domain.model.UserData
-import io.lb.lbgameshop.sign_in.presentation.sing_in.SignInViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow

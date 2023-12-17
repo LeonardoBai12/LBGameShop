@@ -1,7 +1,6 @@
 package io.lb.lbgameshop.order.domain.model
 
 import com.google.gson.Gson
-import io.lb.lbgameshop.game.domain.model.Game
 import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
 import java.util.Calendar
@@ -25,8 +24,6 @@ data class OrderItem(
             )
         }
     }
-
-    fun toJson() = Gson().toJson(this).toString()
 }
 
 fun List<OrderItem>.toJson() = URLEncoder.encode(
