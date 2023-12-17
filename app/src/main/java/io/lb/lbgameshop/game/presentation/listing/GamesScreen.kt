@@ -87,7 +87,7 @@ fun GamesScreen(
                         ),
                         MenuItem(
                             id = "My Orders",
-                            title = stringResource(id = R.string.logout),
+                            title = stringResource(id = R.string.my_orders),
                             contentDescription = "My Orders Button",
                             icon = Icons.Default.ShoppingCart
                         ),

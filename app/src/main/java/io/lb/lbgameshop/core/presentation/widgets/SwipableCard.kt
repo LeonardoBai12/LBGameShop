@@ -99,36 +99,36 @@ fun SwipeableCard(
                     .fillMaxWidth()
                     .padding(horizontal = 12.dp)
                     .padding(bottom = 12.dp)
+
+                    .offset {
+                        IntOffset(offsetTransition.value.roundToInt(), 0)
+                    }
+                    .pointerInput(Unit) {
+                        detectHorizontalDragGestures { _, dragAmount ->
+                            when {
+                                dragAmount >= 6 -> {
+                                    isSwiped.value = true
+                                }
+
+                                dragAmount < -6 -> {
+                                    isSwiped.value = false
+                                }
+                            }
+                        }
+                    }
+                    .layout { measurable, constraints ->
+                        with(measurable.measure(constraints)) {
+                            swipeHeight.value = height
+
+                            layout(width, height) {
+                                placeRelative(0, 0)
+                            }
+                        }
+                    }
             } ?: Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 12.dp)
-                .padding(bottom = 12.dp)
-
-                .offset {
-                    IntOffset(offsetTransition.value.roundToInt(), 0)
-                }
-                .pointerInput(Unit) {
-                    detectHorizontalDragGestures { _, dragAmount ->
-                        when {
-                            dragAmount >= 6 -> {
-                                isSwiped.value = true
-                            }
-
-                            dragAmount < -6 -> {
-                                isSwiped.value = false
-                            }
-                        }
-                    }
-                }
-                .layout { measurable, constraints ->
-                    with(measurable.measure(constraints)) {
-                        swipeHeight.value = height
-
-                        layout(width, height) {
-                            placeRelative(0, 0)
-                        }
-                    }
-                },
+                .padding(bottom = 12.dp),
             onClick = {
                 onClickCard?.invoke()
             },

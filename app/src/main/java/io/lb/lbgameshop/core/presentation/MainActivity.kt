@@ -39,6 +39,8 @@ import io.lb.lbgameshop.game.presentation.listing.GameEvent
 import io.lb.lbgameshop.game.presentation.listing.GamesScreen
 import io.lb.lbgameshop.game.presentation.listing.GamesViewModel
 import io.lb.lbgameshop.order.domain.model.Order
+import io.lb.lbgameshop.order.domain.model.toJson
+import io.lb.lbgameshop.order.presentation.my_orders.MyOrderEvent
 import io.lb.lbgameshop.order.presentation.my_orders.MyOrdersScreen
 import io.lb.lbgameshop.order.presentation.my_orders.MyOrdersViewModel
 import io.lb.lbgameshop.order.presentation.new_order.NewOrderEvent
@@ -93,6 +95,7 @@ class MainActivity : ComponentActivity() {
                     signInViewModel.currentUser?.let {
                         startDestination = MainScreens.GamesScreen.name
                         newOrderViewModel.userData = it
+                        myOrdersViewModel.userData = it
                     }
 
                     NavHost(
@@ -200,7 +203,7 @@ class MainActivity : ComponentActivity() {
                                     }
                                 },
                                 onClickMyOrders = {
-
+                                    navController.navigate(MainScreens.MyOrdersScreen.name)
                                 },
                                 onClickTryAgain = {
                                     gameViewModel.getGames()
@@ -305,8 +308,34 @@ class MainActivity : ComponentActivity() {
                         }
 
                         composable(route = MainScreens.MyOrdersScreen.name) {
-                            MyOrdersScreen(
+                            LaunchedEffect(key1 = "repeatOnLifecycleGetOrder") {
+                                lifecycle.repeatOnLifecycle(Lifecycle.State.RESUMED) {
+                                    myOrdersViewModel.getOrders()
+                                }
+                            }
 
+                            LaunchedEffect(key1 = "launchedEffectKey") {
+                                myOrdersViewModel.eventFlow.collectLatest { event ->
+                                    when (event) {
+                                        is MyOrdersViewModel.UiEvent.NavigateToOrderDetails -> {
+                                            navController.navigate(
+                                                MainScreens.OrderDetailsScreen.name +
+                                                        "/${event.order.toJson()}" +
+                                                        "/${event.items.toJson()}"
+                                            )
+                                        }
+                                    }
+                                }
+                            }
+
+                            MyOrdersScreen(
+                                navController = navController,
+                                state = myOrdersState,
+                                onClickOrder = {
+                                    myOrdersViewModel.onEvent(
+                                        MyOrderEvent.NavigateToOrderDetails(it)
+                                    )
+                                }
                             )
                         }
 

@@ -13,3 +13,12 @@ fun Long.toReleaseDate(): String? {
     val formatter = DateTimeFormatter.ofPattern("MMM/yyyy")
     return localDateTime.format(formatter)
 }
+
+fun Long.toFormattedDate(): String? {
+    val localDateTime = LocalDateTime.ofInstant(
+        Instant.ofEpochMilli((this.times(1))),
+        ZoneId.systemDefault()
+    )
+    val formatter = DateTimeFormatter.ofPattern("EEE, MMM/dd, yyyy, hh:mma")
+    return localDateTime.format(formatter)
+}

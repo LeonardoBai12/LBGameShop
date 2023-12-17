@@ -16,9 +16,10 @@ data class Order(
 
         fun fromSnapshot(hashMap: HashMap<String, String>): Order {
             return Order(
-                uuid = hashMap["uuid"] ?: "",
+                uuid = hashMap["uuid"].orEmpty(),
                 isFinished = hashMap["isFinished"].toBoolean(),
-                createdDate = hashMap["createdDate"] ?: ""
+                createdDate = hashMap["createdDate"].orEmpty(),
+                finishedDate = hashMap["finishedDate"].orEmpty()
             )
         }
     }

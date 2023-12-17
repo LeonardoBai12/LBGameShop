@@ -64,7 +64,7 @@ class MyOrdersViewModel @Inject constructor(
         }
     }
 
-    private fun getOrders() {
+    fun getOrders() {
         getOrdersJob?.cancel()
         getOrdersJob = useCases.getFinishedOrdersUseCase(
             userData ?: return
