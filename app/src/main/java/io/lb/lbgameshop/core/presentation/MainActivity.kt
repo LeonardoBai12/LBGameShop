@@ -360,7 +360,12 @@ class MainActivity : ComponentActivity() {
                             OrderDetailsScreen(
                                 navController = navController,
                                 order = order,
-                                items = items
+                                items = items,
+                                onClickItem = { game ->
+                                    navController.navigate(
+                                        MainScreens.GameDetailsScreen.name + "/${game.toJsonEncode()}"
+                                    )
+                                }
                             )
                         }
                     }
