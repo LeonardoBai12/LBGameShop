@@ -1,5 +1,6 @@
 package io.lb.lbgameshop.order.presentation.widgets
 
+import android.widget.Space
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -77,8 +78,8 @@ private fun OrderItemCardContent(game: Game) {
             Box(
                 modifier = Modifier
                     .clip(RoundedCornerShape(8.dp))
-                    .width(100.dp)
-                    .height(120.dp),
+                    .width(80.dp)
+                    .height(80.dp),
             ) {
                 Image(
                     painter = rememberAsyncImagePainter(
@@ -100,6 +101,8 @@ private fun OrderItemCardContent(game: Game) {
                     fontWeight = FontWeight.SemiBold,
                     fontSize = 16.sp
                 )
+
+                Spacer(modifier = Modifier.height(8.dp))
 
                 Row(modifier = Modifier.fillMaxWidth()) {
                     Text(

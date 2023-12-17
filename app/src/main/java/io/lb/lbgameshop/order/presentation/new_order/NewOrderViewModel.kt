@@ -107,7 +107,6 @@ class NewOrderViewModel @Inject constructor(
                                 order = order,
                             )
                         }
-
                         getOrderItems()
                     }
                 }
@@ -132,6 +131,7 @@ class NewOrderViewModel @Inject constructor(
                     order = state.value.order,
                     game = Game.fromJson(orderItem.data)
                 )
+                getOrder()
             }
         }
     }
@@ -140,6 +140,7 @@ class NewOrderViewModel @Inject constructor(
         viewModelScope.launch {
             userData?.let {
                 useCases.removeOrderItemUseCase(it, orderItem)
+                getOrder()
             }
         }
     }

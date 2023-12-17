@@ -41,6 +41,7 @@ import io.lb.lbgameshop.game.presentation.SalePriceText
 fun GameDetailsScreen(
     navController: NavHostController,
     game: Game,
+    isInTheCart: Boolean,
     onClickAddToCart: (Game) -> Unit
 ) {
     Scaffold(
@@ -178,7 +179,9 @@ fun GameDetailsScreen(
                         .padding(24.dp),
                     containerColor = MaterialTheme.colorScheme.secondary,
                     contentColor = MaterialTheme.colorScheme.onSecondary,
-                    text = "Add to Cart"
+                    text = if (isInTheCart) {
+                        "Remove from shopping kart"
+                    } else "Add to shopping kart"
                 ) {
                     onClickAddToCart.invoke(game)
                     navController.navigateUp()

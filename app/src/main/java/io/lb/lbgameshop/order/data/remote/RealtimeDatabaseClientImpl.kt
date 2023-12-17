@@ -68,6 +68,7 @@ class RealtimeDatabaseClientImpl(
     override suspend fun removeOrderItem(userData: UserData, orderItem: OrderItem) {
         database.child(userData.userId ?: return)
             .child(orderItem.orderId)
+            .child("orderItems")
             .child(orderItem.uuid)
             .setValue(null)
             .await()

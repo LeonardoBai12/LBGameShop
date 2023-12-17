@@ -78,7 +78,7 @@ fun SwipeableCard(
                 modifier = Modifier
                     .height(swipeHeight.value.toDp(LocalDensity.current))
                     .fillMaxWidth(0.3F)
-                    .padding(horizontal = 12.dp),
+                    .padding(horizontal = 6.dp),
                 shape = RoundedCornerShape(16.dp),
                 color = MaterialTheme.colorScheme.errorContainer,
                 onClick = {

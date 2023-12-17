@@ -12,4 +12,6 @@
     <string name="signed_out">Signed out</string>
     <string name="logout">Logout</string>
     <string name="home">Home</string>
+    <string name="undo">Undo</string>
+    <string name="item_deleted">Item deleted</string>
 </resources>

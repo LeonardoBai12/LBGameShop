@@ -209,14 +209,30 @@ class MainActivity : ComponentActivity() {
                                 }
                             )
                         ) { backStackEntry ->
-                            backStackEntry.arguments?.getString(GAME)?.let {
+                            backStackEntry.arguments?.getString(GAME)?.let { json ->
+                                val gameFromJson = Game.fromJson(json)
+                                val isInTheCart = newOrderState.items.any {
+                                    Game.fromJson(it.data).gameID == gameFromJson.gameID
+                                }
+
                                 GameDetailsScreen(
                                     navController = navController,
-                                    game = Game.fromJson(it),
+                                    game = gameFromJson,
+                                    isInTheCart = isInTheCart,
                                     onClickAddToCart = { game ->
-                                        newOrderViewModel.onEvent(
-                                            NewOrderEvent.RequestInsert(game)
-                                        )
+                                        if (isInTheCart.not()) {
+                                            newOrderViewModel.onEvent(
+                                                NewOrderEvent.RequestInsert(game)
+                                            )
+                                        } else {
+                                            newOrderViewModel.onEvent(
+                                                NewOrderEvent.RequestDelete(
+                                                    newOrderState.items.find {
+                                                        Game.fromJson(it.data).gameID == gameFromJson.gameID
+                                                    } ?: return@GameDetailsScreen
+                                                )
+                                            )
+                                        }
                                     }
                                 )
                             }
@@ -225,12 +241,38 @@ class MainActivity : ComponentActivity() {
                         composable(
                             route = MainScreens.NewOrderScreen.name
                         ) {
+                            LaunchedEffect(key1 = "repeatOnLifecycleGetOrder") {
+                                lifecycle.repeatOnLifecycle(Lifecycle.State.RESUMED) {
+                                    newOrderViewModel.getOrder()
+                                }
+                            }
+
                             val userData = signInViewModel.currentUser
                             newOrderViewModel.userData = userData
 
                             NewOrderScreen(
                                 navController = navController,
-                                state = newOrderState
+                                state = newOrderState,
+                                onClickItem = { game ->
+                                    navController.navigate(
+                                        MainScreens.GameDetailsScreen.name + "/${game.toJsonEncode()}"
+                                    )
+                                },
+                                onClickDelete = { game ->
+                                    newOrderViewModel.onEvent(
+                                        NewOrderEvent.RequestDelete(
+                                            newOrderState.items.find {
+                                                Game.fromJson(it.data).gameID == game.gameID
+                                            } ?: return@NewOrderScreen
+                                        )
+                                    )
+                                },
+                                onRestoreItem = {
+                                    newOrderViewModel.onEvent(NewOrderEvent.RestoreTask)
+                                },
+                                onClickFinish = {
+
+                                }
                             )
                         }
                     }
